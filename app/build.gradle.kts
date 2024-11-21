@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.wiseman.wetherapp"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -67,6 +67,10 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi.converter)
+    implementation(libs.logging.interceptor)
+    implementation(libs.location.service)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
