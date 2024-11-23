@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             WeatherAppTheme {
-                HomeScreen(viewModel.state)
+                HomeScreen(viewModel)
             }
         }
     }
