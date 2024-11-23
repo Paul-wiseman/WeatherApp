@@ -40,7 +40,7 @@ class WeatherViewModel @Inject constructor(
                 )) {
                     is Resources.Error -> {
                         state = state.copy(
-                            isLoading = false,
+                            isLoading = true,
                             weatherInfo = null,
                             error = result.message
                         )
@@ -49,7 +49,7 @@ class WeatherViewModel @Inject constructor(
                     is Resources.Success -> {
                         state = state.copy(
                             weatherInfo = result.data,
-                            isLoading = false,
+                            isLoading = true,
                             error = null
                         )
                     }
