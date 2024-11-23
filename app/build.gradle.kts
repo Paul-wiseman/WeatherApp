@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -80,6 +79,7 @@ dependencies {
     implementation(libs.retrofit.moshi.converter)
     implementation(libs.logging.interceptor)
     implementation(libs.location.service)
+    implementation(libs.kotlin.either.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
