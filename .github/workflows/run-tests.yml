@@ -30,11 +30,7 @@ jobs:
     needs: build
     steps:
       - name: Checkout code
-        uses: actions/check@v4.1.0
-        with:
-          distribution: 'adopt'
-          java-version: '17'
-
+        uses: actions/checkout@v4
       - name: Run Tests with Gradle
         run: ./gradlew test
 
