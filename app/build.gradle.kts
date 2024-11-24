@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -52,6 +54,12 @@ android {
     }
 }
 
+tasks.withType<KotlinJvmCompile>().configureEach {
+    compilerOptions {
+        freeCompilerArgs.add("-Xcontext-receivers")
+    }
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -71,6 +79,7 @@ dependencies {
     implementation(libs.retrofit.moshi.converter)
     implementation(libs.logging.interceptor)
     implementation(libs.location.service)
+    implementation(libs.kotlin.either.core)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

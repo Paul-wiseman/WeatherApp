@@ -37,8 +37,10 @@ fun WeatherDataDto.toWeatherDataMap(): Map<Int, List<WeatherData>> {
     }.mapValues {
         it.value.map { it.data }
     }.also {
-        println("The current items keys - ${it.keys}")
-        println("The current items entries ---- ${it.entries}")
+        it.entries.forEach{
+            println()
+        println("The current items - ${it.value}")
+        }
     }
 
 }
