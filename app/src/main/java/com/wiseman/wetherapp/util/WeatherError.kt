@@ -1,4 +1,4 @@
-package com.wiseman.wetherapp.presentation.state
+package com.wiseman.wetherapp.util
 
 import android.content.Context
 import androidx.annotation.StringRes

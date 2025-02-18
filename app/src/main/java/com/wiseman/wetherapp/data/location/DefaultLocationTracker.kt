@@ -11,7 +11,7 @@ import arrow.core.Either
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.wiseman.wetherapp.R
 import com.wiseman.wetherapp.domain.LocationTracker
-import com.wiseman.wetherapp.presentation.state.WeatherError
+import com.wiseman.wetherapp.util.WeatherError
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject

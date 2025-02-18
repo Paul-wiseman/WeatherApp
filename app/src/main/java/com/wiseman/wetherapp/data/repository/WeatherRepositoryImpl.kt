@@ -6,11 +6,11 @@ import com.wiseman.wetherapp.data.remote.WeatherApi
 import com.wiseman.wetherapp.domain.LocationTracker
 import com.wiseman.wetherapp.domain.model.WeatherInfo
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
-import com.wiseman.wetherapp.presentation.state.WeatherError
+import com.wiseman.wetherapp.util.WeatherError
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
-    private val api: WeatherApi,
+    private val weatherApiService: WeatherApi,
     private val locationTracker: LocationTracker
 ) : WeatherRepository {
     override suspend fun getWeatherData(): Either<WeatherError, WeatherInfo> {
@@ -18,13 +18,12 @@ class WeatherRepositoryImpl @Inject constructor(
             return when (val location = locationTracker.getCurrentLocation()) {
                 is Either.Right -> {
                     Either.Right(
-                        api.getWeatherData(
+                        weatherApiService.getWeatherData(
                             lat = location.value.latitude,
                             long = location.value.longitude
                         ).toWeatherInfo()
                     )
                 }
-
                 is Either.Left -> {
                     Either.Left(location.value)
                 }

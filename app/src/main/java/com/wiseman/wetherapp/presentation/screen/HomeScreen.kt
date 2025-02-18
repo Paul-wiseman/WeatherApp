@@ -15,19 +15,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.wiseman.wetherapp.presentation.components.WeatherCard
+import com.wiseman.wetherapp.presentation.components.ShowWeatherCard
 import com.wiseman.wetherapp.presentation.components.WeatherForecast
 import com.wiseman.wetherapp.presentation.state.WeatherState
 import com.wiseman.wetherapp.presentation.viewmodel.WeatherViewModel
 import com.wiseman.wetherapp.ui.theme.DarkBlue
 import com.wiseman.wetherapp.ui.theme.DeepBlue
+import com.wiseman.wetherapp.ui.theme.LocalSpacing
+import com.wiseman.wetherapp.ui.theme.LocalTextSize
 
 @Composable
 fun HomeScreen(
@@ -35,7 +35,8 @@ fun HomeScreen(
 ) {
     HomeScreenContent(
         viewModel.state.collectAsStateWithLifecycle().value,
-        viewModel::refreshWeatherData
+        viewModel::refreshWeatherData,
+        viewModel.isRefreshing.collectAsStateWithLifecycle().value
     )
 }
 
@@ -43,7 +44,8 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenContent(
     weatherState: WeatherState,
-    onRefresh: () -> Unit
+    onRefreshCallback: () -> Unit,
+    isRefreshing: Boolean
 ) {
     Scaffold { innerPadding ->
         val refreshState = rememberPullToRefreshState()
@@ -52,64 +54,51 @@ private fun HomeScreenContent(
                 .background(DarkBlue)
                 .padding(innerPadding),
             state = refreshState,
-            isRefreshing = weatherState.isRefreshing,
-            onRefresh = onRefresh
+            isRefreshing = isRefreshing,
+            onRefresh = onRefreshCallback
         ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
 
-                ) {
-                    WeatherCard(
-                        state = weatherState,
-                        backgroundColor = DeepBlue
+            ) {
+
+                when (weatherState) {
+                    is WeatherState.Error -> ShowError(
+                        weatherState.weatherError.toString(),
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    WeatherForecast(
-                        state = weatherState
-                    )
+
+                    WeatherState.Loading -> CircularProgressIndicator()
+                    is WeatherState.Success -> {
+                        weatherState.data.currentWeatherData?.let { data ->
+                            ShowWeatherCard(
+                                weatherData = data,
+                                backgroundColor = DeepBlue
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(LocalSpacing.current.spaceMedium))
+                        WeatherForecast(
+                            weatherInfo = weatherState.data
+                        )
+                    }
                 }
 
-                ShowCircularProgressBar(
-                    Modifier.align(Alignment.Center),
-                    weatherState.isLoading,
-                )
-
-                ShowError(
-                    weatherState.error?.weatherErrorString(LocalContext.current),
-                    Modifier.align(Alignment.Center)
-                )
             }
         }
-
-}
-
-
-@Composable
-private fun ShowCircularProgressBar(
-    modifier: Modifier,
-    show: Boolean,
-) {
-    if (show) {
-        CircularProgressIndicator(
-            modifier = modifier
-        )
     }
+
 }
 
 @Composable
 private fun ShowError(
-    error: String?,
-    modifier: Modifier
+    error: String?
 ) {
-
     error?.let {
         Text(
             text = error,
             color = Color.Red,
             textAlign = TextAlign.Center,
-            modifier = modifier
         )
     }
 }

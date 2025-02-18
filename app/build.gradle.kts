@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.compose.compiler)
     id("com.google.devtools.ksp")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -72,6 +73,8 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.hilt.common)
+    testImplementation(libs.junit.jupiter)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.lifecycle.viewmodel.compose)
@@ -80,6 +83,9 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.location.service)
     implementation(libs.kotlin.either.core)
+    implementation(libs.androidx.workmanager)
+    implementation(libs.kotlin.serialization.json)
+    implementation(libs.data.store)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

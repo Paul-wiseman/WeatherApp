@@ -3,7 +3,10 @@ package com.wiseman.wetherapp.di
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.wiseman.wetherapp.data.preference.LocationPreference
+import com.wiseman.wetherapp.data.preference.WeatherAppDataStore
 import com.wiseman.wetherapp.data.remote.WeatherApi
+import com.wiseman.wetherapp.data.works.WorkStarter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,6 +48,15 @@ object AppModule {
     @Provides
     fun providesFussedLocationProviderClient(@ApplicationContext context: Context): FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
+
+    @Singleton
+    @Provides
+    fun providesRainWorkManager(@ApplicationContext context: Context) = WorkStarter(context)
+
+    @Singleton
+    @Provides
+    fun providesLocationPreferences(@ApplicationContext context: Context): LocationPreference =
+        WeatherAppDataStore(context)
 
 
     const val BASE_URL = "https://api.open-meteo.com/"

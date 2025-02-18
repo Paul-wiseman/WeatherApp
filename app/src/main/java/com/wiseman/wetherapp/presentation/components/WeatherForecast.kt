@@ -26,11 +26,9 @@ import java.time.LocalDateTime
 @Composable
 fun WeatherForecast(
     modifier: Modifier = Modifier,
-    state: WeatherState,
+    weatherInfo: WeatherInfo,
 ) {
-
-    state.weatherInfo?.weatherDataPerDay?.get(0)?.let { data: List<WeatherData> ->
-
+    weatherInfo.weatherDataPerDay[0]?.let { data: List<WeatherData> ->
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -64,36 +62,32 @@ fun PreviewWeatherForecast() {
     WeatherAppTheme {
         WeatherForecast(
             modifier = Modifier.background(DarkBlue),
-            state = WeatherState(
-                weatherInfo = WeatherInfo(
-                    weatherDataPerDay = mapOf(
-                        0 to listOf(
-                            WeatherData(
-                                time = LocalDateTime.now(),
-                                temperature = 8.9,
-                                pressure = 10.11,
-                                windSpeed = 12.13,
-                                humidity = 14.15,
-                                weatherType = WeatherType.Foggy
+            weatherInfo = WeatherInfo(
+                weatherDataPerDay = mapOf(
+                    0 to listOf(
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperature = 8.9,
+                            pressure = 10.11,
+                            windSpeed = 12.13,
+                            humidity = 14.15,
+                            weatherType = WeatherType.Foggy
 
-                            )
                         )
-                    ),
-                    currentWeatherData = WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 8.9,
-                        pressure = 10.11,
-                        windSpeed = 12.13,
-                        humidity = 14.15,
-                        weatherType = WeatherType.Overcast
-
                     )
-
                 ),
+                currentWeatherData = WeatherData(
+                    time = LocalDateTime.now(),
+                    temperature = 8.9,
+                    pressure = 10.11,
+                    windSpeed = 12.13,
+                    humidity = 14.15,
+                    weatherType = WeatherType.Overcast
 
-                isLoading = false,
-                error = null
-            )
+                )
+
+            ),
         )
+
     }
 }

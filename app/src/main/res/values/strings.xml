@@ -3,4 +3,9 @@
     <string name="enable_location_permission_error">Couldn\'t retrieve location. Please grant Location permission and enable GPS</string>
     <string name="unable_to_get_current_location">Error trying to read your current Location, please retry again</string>
     <string name="failed_to_get_current_location">Failure trying to read user current Location</string>
+    <string name="date">Today %s</string>
+    <string name="temperature">%s °C</string>
+    <string name="pressure_unit">hpa</string>
+    <string name="percentage">%</string>
+    <string name="windspeed_unit">km/h</string>
 </resources>

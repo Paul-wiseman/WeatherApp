@@ -17,6 +17,12 @@ moshiVersion = "2.9.0"
 loggingInterceptorVersion = "5.0.0-alpha.3"
 locationService = "20.0.0"
 kotlinEitherVersion = "1.2.4"
+work_version = "2.9.1"
+kotlinSerializationVersion = "2.0.21"
+kotlinJsonVersion = "1.7.3"
+hiltCommon = "1.2.0"
+dataStoreVersion = "1.1.1"
+junitJupiter = "5.8.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,7 +39,9 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-kotlin-either-core = {module="io.arrow-kt:arrow-core", version.ref = "kotlinEitherVersion"}
+kotlin-either-core = { module = "io.arrow-kt:arrow-core", version.ref = "kotlinEitherVersion" }
+kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinJsonVersion" }
+data-store = { module = "androidx.datastore:datastore-preferences", version.ref = "dataStoreVersion" }
 
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltCompose" }
 lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecyleViewModelCompose" }
@@ -43,12 +51,15 @@ retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit
 retrofit-moshi-converter = { module = "com.squareup.retrofit2:converter-moshi", version.ref = "moshiVersion" }
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "loggingInterceptorVersion" }
 location-service = { module = "com.google.android.gms:play-services-location", version.ref = "locationService" }
+androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "work_version" }
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp-version" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinSerializationVersion" }
 
 
