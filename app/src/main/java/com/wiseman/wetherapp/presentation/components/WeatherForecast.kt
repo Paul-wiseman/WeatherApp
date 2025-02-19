@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import com.wiseman.wetherapp.domain.model.WeatherData
 import com.wiseman.wetherapp.domain.model.WeatherInfo
 import com.wiseman.wetherapp.domain.weather.WeatherType
-import com.wiseman.wetherapp.presentation.state.WeatherState
 import com.wiseman.wetherapp.ui.theme.DarkBlue
 import com.wiseman.wetherapp.ui.theme.WeatherAppTheme
 import java.time.LocalDateTime

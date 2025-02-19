@@ -17,15 +17,12 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
-import arrow.core.Either
 import com.wiseman.wetherapp.MainActivity
 import com.wiseman.wetherapp.data.preference.LocationPreference
-import com.wiseman.wetherapp.domain.model.WeatherData
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
 import com.wiseman.wetherapp.domain.weather.WeatherType
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.time.LocalDateTime
 
 @HiltWorker
 class RainNotificationWorker @AssistedInject constructor(

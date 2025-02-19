@@ -1,6 +1,5 @@
 package com.wiseman.wetherapp.ui.theme
 
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
