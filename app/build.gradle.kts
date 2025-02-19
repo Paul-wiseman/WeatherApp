@@ -61,6 +61,10 @@ tasks.withType<KotlinJvmCompile>().configureEach {
     }
 }
 
+tasks.withType<Test>{
+    useJUnitPlatform()
+}
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -86,7 +90,9 @@ dependencies {
     implementation(libs.androidx.workmanager)
     implementation(libs.kotlin.serialization.json)
     implementation(libs.data.store)
-
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testImplementation(libs.coroutine.test)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

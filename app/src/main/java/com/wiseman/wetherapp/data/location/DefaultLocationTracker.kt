@@ -10,8 +10,7 @@ import androidx.core.content.ContextCompat
 import arrow.core.Either
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.wiseman.wetherapp.R
-import com.wiseman.wetherapp.domain.LocationTracker
-import com.wiseman.wetherapp.util.WeatherError
+import com.wiseman.wetherapp.util.Failure
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class DefaultLocationTracker @Inject constructor(
     private val locationClient: FusedLocationProviderClient,
     private val application: Application
 ) : LocationTracker {
-    override suspend fun getCurrentLocation(): Either<WeatherError, Location> {
+    override suspend fun getCurrentLocation(): Either<Failure, LocationData> {
         val hasFineLocationAccessPermission = ContextCompat.checkSelfPermission(
             application,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -40,25 +39,37 @@ class DefaultLocationTracker @Inject constructor(
             )
 
         if (!hasCoarseLocationPermission || !hasFineLocationAccessPermission || !isGpsEnabled) {
-            return Either.Left(WeatherError.LocationPermissionError(R.string.enable_location_permission_error))
+            return Either.Left(Failure.LocationPermissionError(R.string.enable_location_permission_error))
         }
 
-        return suspendCancellableCoroutine { cont: CancellableContinuation<Either<WeatherError, Location>> ->
+        return suspendCancellableCoroutine { cont: CancellableContinuation<Either<Failure, LocationData>> ->
             locationClient.lastLocation.apply {
                 if (isComplete) {
                     if (isSuccessful) {
-                        cont.resume(Either.Right(result))
+
+                        cont.resume(
+                            Either.Right(
+                                LocationData(
+                                    latitude = result.latitude,
+                                    longitude = result.longitude
+                                )
+                            )
+                        )
                     } else {
-                        cont.resume(Either.Left(WeatherError.LocationError(R.string.unable_to_get_current_location)))
+                        cont.resume(Either.Left(Failure.LocationError(R.string.unable_to_get_current_location)))
                     }
                     return@suspendCancellableCoroutine
                 }
 
-                addOnSuccessListener {
-                    cont.resume(Either.Right(it))
+                addOnSuccessListener { value: Location ->
+
+                    cont.resume(Either.Right(LocationData(
+                        latitude = value.latitude,
+                        longitude = value.longitude
+                    )))
                 }
                 addOnFailureListener {
-                    cont.resume(Either.Left(WeatherError.LocationError(R.string.failed_to_get_current_location)))
+                    cont.resume(Either.Left(Failure.LocationError(R.string.failed_to_get_current_location)))
                 }
 
                 addOnCompleteListener {

@@ -1,7 +1,7 @@
 package com.wiseman.wetherapp.di
 
 import com.wiseman.wetherapp.data.location.DefaultLocationTracker
-import com.wiseman.wetherapp.domain.LocationTracker
+import com.wiseman.wetherapp.data.location.LocationTracker
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

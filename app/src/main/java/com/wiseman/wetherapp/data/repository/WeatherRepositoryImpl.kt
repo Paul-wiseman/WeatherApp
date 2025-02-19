@@ -3,38 +3,47 @@ package com.wiseman.wetherapp.data.repository
 import arrow.core.Either
 import com.wiseman.wetherapp.data.mappers.toWeatherInfo
 import com.wiseman.wetherapp.data.remote.WeatherApi
-import com.wiseman.wetherapp.domain.LocationTracker
+import com.wiseman.wetherapp.data.location.LocationTracker
 import com.wiseman.wetherapp.domain.model.WeatherInfo
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
-import com.wiseman.wetherapp.util.WeatherError
+import com.wiseman.wetherapp.util.Failure
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
     private val weatherApiService: WeatherApi,
-    private val locationTracker: LocationTracker
+    private val locationTracker: LocationTracker,
+    private val coroutineDispatcher: CoroutineDispatcher,
 ) : WeatherRepository {
-    override suspend fun getWeatherData(): Either<WeatherError, WeatherInfo> {
-        return try {
-            return when (val location = locationTracker.getCurrentLocation()) {
+    override suspend fun getWeatherData(): Flow<Either<Failure, WeatherInfo>> = flow {
+        try {
+            when (val location = locationTracker.getCurrentLocation()) {
                 is Either.Right -> {
-                    Either.Right(
-                        weatherApiService.getWeatherData(
-                            lat = location.value.latitude,
-                            long = location.value.longitude
-                        ).toWeatherInfo()
+                    emit(
+                        Either.Right(
+                            weatherApiService.getWeatherData(
+                                lat = location.value.latitude,
+                                long = location.value.longitude
+                            ).toWeatherInfo()
+                        )
                     )
                 }
+
                 is Either.Left -> {
-                    Either.Left(location.value)
+                    emit(Either.Left(location.value))
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
-            Either.Left(
-                WeatherError.NetworkError(
-                    message = e.message ?: "An error has occurred trying to fetch weather data"
+            emit(
+                Either.Left(
+                    Failure.NetworkError(
+                        message = e.message ?: "An failure has occurred trying to fetch weather data"
+                    )
                 )
             )
         }
-    }
+    }.flowOn(coroutineDispatcher)
 }

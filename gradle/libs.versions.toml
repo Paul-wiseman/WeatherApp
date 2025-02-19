@@ -23,6 +23,9 @@ kotlinJsonVersion = "1.7.3"
 hiltCommon = "1.2.0"
 dataStoreVersion = "1.1.1"
 junitJupiter = "5.8.1"
+mockKVersion = "1.13.13"
+turbinVersion = "1.2.0"
+coroutinesTestVersion = "1.5.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -54,6 +57,9 @@ location-service = { module = "com.google.android.gms:play-services-location", v
 androidx-workmanager = { module = "androidx.work:work-runtime-ktx", version.ref = "work_version" }
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-common", version.ref = "hiltCommon" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbinVersion" }
+coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesTestVersion" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockKVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

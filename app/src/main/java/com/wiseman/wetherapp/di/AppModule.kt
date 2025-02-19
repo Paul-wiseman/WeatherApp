@@ -7,6 +7,8 @@ import com.wiseman.wetherapp.data.preference.LocationPreference
 import com.wiseman.wetherapp.data.preference.WeatherAppDataStore
 import com.wiseman.wetherapp.data.remote.WeatherApi
 import com.wiseman.wetherapp.data.works.WorkStarter
+import com.wiseman.wetherapp.util.coroutine.DispatchProvider
+import com.wiseman.wetherapp.util.coroutine.DispatchProviderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -57,6 +59,10 @@ object AppModule {
     @Provides
     fun providesLocationPreferences(@ApplicationContext context: Context): LocationPreference =
         WeatherAppDataStore(context)
+
+    @Singleton
+    @Provides
+    fun providesDispatchProvider():DispatchProvider = DispatchProviderImpl()
 
 
     const val BASE_URL = "https://api.open-meteo.com/"

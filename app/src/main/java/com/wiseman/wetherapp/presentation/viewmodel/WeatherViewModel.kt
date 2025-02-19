@@ -4,15 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import arrow.core.Either
 import com.wiseman.wetherapp.data.works.WorkStarter
-import com.wiseman.wetherapp.domain.LocationTracker
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
 import com.wiseman.wetherapp.presentation.state.WeatherState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -29,20 +26,22 @@ class WeatherViewModel @Inject constructor(
 
     fun loadWeatherInfo() {
         viewModelScope.launch {
-            when (val result = repository.getWeatherData()) {
-                is Either.Left -> {
-                    _state.update {
-                        WeatherState.Error(result.value)
+            repository.getWeatherData().collectLatest { weatherData ->
+                when (weatherData) {
+                    is Either.Left -> {
+                        _state.update {
+                            WeatherState.Error(weatherData.value)
+                        }
                     }
-                }
 
-                is Either.Right -> {
-                    _state.update {
-                        WeatherState.Success(result.value)
+                    is Either.Right -> {
+                        _state.update {
+                            WeatherState.Success(weatherData.value)
+                        }
                     }
                 }
+                _isRefreshing.update { false }
             }
-            _isRefreshing.update { false }
         }
     }
 

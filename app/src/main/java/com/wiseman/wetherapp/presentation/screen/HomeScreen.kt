@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wiseman.wetherapp.presentation.components.ShowWeatherCard
 import com.wiseman.wetherapp.presentation.components.WeatherForecast
@@ -27,7 +26,6 @@ import com.wiseman.wetherapp.presentation.viewmodel.WeatherViewModel
 import com.wiseman.wetherapp.ui.theme.DarkBlue
 import com.wiseman.wetherapp.ui.theme.DeepBlue
 import com.wiseman.wetherapp.ui.theme.LocalSpacing
-import com.wiseman.wetherapp.ui.theme.LocalTextSize
 
 @Composable
 fun HomeScreen(
@@ -66,7 +64,7 @@ private fun HomeScreenContent(
 
                 when (weatherState) {
                     is WeatherState.Error -> ShowError(
-                        weatherState.weatherError.toString(),
+                        weatherState.failure.toString(),
                     )
 
                     WeatherState.Loading -> CircularProgressIndicator()
