@@ -61,7 +61,7 @@ tasks.withType<KotlinJvmCompile>().configureEach {
     }
 }
 
-tasks.withType<Test>{
+tasks.withType<Test> {
     useJUnitPlatform()
 }
 
@@ -79,6 +79,7 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.common)
     testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.jupiter)
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.lifecycle.viewmodel.compose)

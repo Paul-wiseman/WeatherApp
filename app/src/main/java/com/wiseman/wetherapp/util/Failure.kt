@@ -1,16 +1,14 @@
 package com.wiseman.wetherapp.util
 
-import android.content.Context
-import androidx.annotation.StringRes
-
 sealed class Failure {
-    data class LocationError(@StringRes val message: Int) : Failure()
+    data class LocationError(val message: String = UNABLE_TO_GET_LOCATION_ERROR) : Failure()
     data class NetworkError(val message: String) : Failure()
-    data class LocationPermissionError(@StringRes val message: Int) : Failure()
+    data class LocationPermissionError(val message: String = LOCATION_PERMISSION_ERROR) : Failure()
 
-    fun failureErrorToString(context: Context): String = when (this) {
-        is LocationError -> context.getString(message)
-        is NetworkError -> message
-        is LocationPermissionError -> context.getString(message)
+    private companion object {
+        const val UNABLE_TO_GET_LOCATION_ERROR =
+            "Error trying to read your current Location, please retry again"
+        const val LOCATION_PERMISSION_ERROR =
+            "Couldn't retrieve location. Please grant Location permission and enable GPS"
     }
 }

@@ -9,7 +9,6 @@ import android.location.LocationManager
 import androidx.core.content.ContextCompat
 import arrow.core.Either
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.wiseman.wetherapp.R
 import com.wiseman.wetherapp.util.Failure
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -39,7 +38,7 @@ class DefaultLocationTracker @Inject constructor(
             )
 
         if (!hasCoarseLocationPermission || !hasFineLocationAccessPermission || !isGpsEnabled) {
-            return Either.Left(Failure.LocationPermissionError(R.string.enable_location_permission_error))
+            return Either.Left(Failure.LocationPermissionError())
         }
 
         return suspendCancellableCoroutine { cont: CancellableContinuation<Either<Failure, LocationData>> ->
@@ -56,20 +55,24 @@ class DefaultLocationTracker @Inject constructor(
                             )
                         )
                     } else {
-                        cont.resume(Either.Left(Failure.LocationError(R.string.unable_to_get_current_location)))
+                        cont.resume(Either.Left(Failure.LocationError()))
                     }
                     return@suspendCancellableCoroutine
                 }
 
                 addOnSuccessListener { value: Location ->
 
-                    cont.resume(Either.Right(LocationData(
-                        latitude = value.latitude,
-                        longitude = value.longitude
-                    )))
+                    cont.resume(
+                        Either.Right(
+                            LocationData(
+                                latitude = value.latitude,
+                                longitude = value.longitude
+                            )
+                        )
+                    )
                 }
                 addOnFailureListener {
-                    cont.resume(Either.Left(Failure.LocationError(R.string.failed_to_get_current_location)))
+                    cont.resume(Either.Left(Failure.LocationError()))
                 }
 
                 addOnCompleteListener {

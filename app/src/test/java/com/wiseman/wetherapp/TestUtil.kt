@@ -1,5 +1,6 @@
 package com.wiseman.wetherapp
 
+import com.wiseman.wetherapp.data.location.LocationData
 import com.wiseman.wetherapp.data.remote.WeatherDataDto
 import com.wiseman.wetherapp.data.remote.WeatherDto
 
@@ -14,4 +15,6 @@ object TestUtil {
             humidities = listOf()
         )
     )
+
+    fun getLocationData() = LocationData(latitude = 4.5, longitude = 6.7)
 }

@@ -3,7 +3,6 @@ package com.wiseman.wetherapp.data.repository
 import app.cash.turbine.test
 import arrow.core.Either
 import com.wiseman.wetherapp.TestUtil
-import com.wiseman.wetherapp.data.location.LocationData
 import com.wiseman.wetherapp.data.location.LocationTracker
 import com.wiseman.wetherapp.data.mappers.toWeatherInfo
 import com.wiseman.wetherapp.data.remote.WeatherApi
@@ -26,7 +25,7 @@ class WeatherRepositoryImplTest {
     private lateinit var weatherAppRepositoryImpl: WeatherRepositoryImpl
     private val mockWeatherApiService = mockk<WeatherApi>()
     private val mockLocationTracker = mockk<LocationTracker>()
-    private val locationData = LocationData(latitude = 4.5, longitude = 6.7)
+    private val locationData = TestUtil.getLocationData()
     private val testWeatherData = TestUtil.getTestWeatherDto()
 
     @AfterEach
@@ -37,6 +36,7 @@ class WeatherRepositoryImplTest {
 
     @Test
     fun shouldReturnWeatherInfoForCorrectLocationData() = runTest {
+        // given
         coEvery {
             mockWeatherApiService.getWeatherData(
                 lat = locationData.latitude,
@@ -51,10 +51,12 @@ class WeatherRepositoryImplTest {
             StandardTestDispatcher(testScheduler)
         )
 
+        // when
         val weatherData = weatherAppRepositoryImpl.getWeatherData()
 
         advanceUntilIdle()
 
+        // then
         weatherData.test {
             assertEquals(Either.Right(testWeatherData.toWeatherInfo()), awaitItem())
             awaitComplete()
@@ -68,9 +70,8 @@ class WeatherRepositoryImplTest {
 
     @Test
     fun shouldReturnFailureWhenUserLocationIsUnAvailable() = runTest {
-        val expected = Failure.LocationError(
-            android.R.string.cancel
-        )
+        // given
+        val expected = Failure.LocationError()
         coEvery { mockLocationTracker.getCurrentLocation() } returns Either.Left(
             expected
         )
@@ -81,10 +82,12 @@ class WeatherRepositoryImplTest {
             StandardTestDispatcher(testScheduler)
         )
 
+        // when
         val weatherData = weatherAppRepositoryImpl.getWeatherData()
 
         advanceUntilIdle()
 
+        // when
         weatherData.test {
             assertEquals(Either.Left(expected), awaitItem())
             awaitComplete()
@@ -95,6 +98,7 @@ class WeatherRepositoryImplTest {
 
     @Test
     fun shouldReturnFailureWhenThereIsAnExceptionWithFetchingWeatherData() = runTest {
+        // given
         val expected = "Something Went Wrong"
         coEvery { mockLocationTracker.getCurrentLocation() } returns Either.Right(
             locationData
@@ -111,10 +115,12 @@ class WeatherRepositoryImplTest {
             StandardTestDispatcher(testScheduler)
         )
 
+        // when
         val weatherData = weatherAppRepositoryImpl.getWeatherData()
 
         advanceUntilIdle()
 
+        // then
         weatherData.test {
             assertEquals(Either.Left(Failure.NetworkError(expected)), awaitItem())
             awaitComplete()
