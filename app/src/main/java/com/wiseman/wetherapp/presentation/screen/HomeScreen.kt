@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.wiseman.wetherapp.presentation.components.ShowLoadingIcon
 import com.wiseman.wetherapp.presentation.components.ShowWeatherCard
 import com.wiseman.wetherapp.presentation.components.WeatherForecast
 import com.wiseman.wetherapp.presentation.state.WeatherState
@@ -32,7 +32,7 @@ fun HomeScreen(
     viewModel: WeatherViewModel
 ) {
     HomeScreenContent(
-        viewModel.state.collectAsStateWithLifecycle().value,
+        viewModel.weatherDataUiState.collectAsStateWithLifecycle().value,
         viewModel::refreshWeatherData,
         viewModel.isRefreshing.collectAsStateWithLifecycle().value
     )
@@ -67,7 +67,7 @@ private fun HomeScreenContent(
                         weatherState.failure.toString(),
                     )
 
-                    WeatherState.Loading -> CircularProgressIndicator()
+                    WeatherState.Loading -> ShowLoadingIcon()
                     is WeatherState.Success -> {
                         weatherState.data.currentWeatherData?.let { data ->
                             ShowWeatherCard(

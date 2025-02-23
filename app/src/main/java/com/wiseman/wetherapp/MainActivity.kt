@@ -25,7 +25,6 @@ class MainActivity : ComponentActivity() {
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
             viewModel.loadWeatherInfo()
-            viewModel.startRainWorker()
         }
 
         locationAccessPermissionLauncher.launch(
