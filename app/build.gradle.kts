@@ -50,7 +50,9 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes.addAll(
+                listOf("/META-INF/{AL2.0,LGPL2.1}", "META-INF/LICENSE.md")
+            )
         }
     }
 }
@@ -78,6 +80,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit.jupiter)
     androidTestImplementation(libs.junit.jupiter)
     ksp(libs.hilt.android.compiler)
