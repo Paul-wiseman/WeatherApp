@@ -19,11 +19,11 @@ object RepositoryModule {
     @Provides
     fun bindsRepository(
         weatherApiService: WeatherApi,
-        locationTracker: LocationTracker,
-        dispatchProvider: DispatchProvider
+        dispatchProvider: DispatchProvider,
+        locationTracker: LocationTracker
     ): WeatherRepository = WeatherRepositoryImpl(
         weatherApiService = weatherApiService,
-        locationTracker = locationTracker,
-        coroutineDispatcher = dispatchProvider.io
+        coroutineDispatcher = dispatchProvider.io,
+        locationTracker = locationTracker
     )
 }

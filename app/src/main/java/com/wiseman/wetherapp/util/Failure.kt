@@ -5,7 +5,7 @@ sealed class Failure {
     data class NetworkError(val message: String) : Failure()
     data class LocationPermissionError(val message: String = LOCATION_PERMISSION_ERROR) : Failure()
 
-    private companion object {
+     companion object {
         const val UNABLE_TO_GET_LOCATION_ERROR =
             "Error trying to read your current Location, please retry again"
         const val LOCATION_PERMISSION_ERROR =

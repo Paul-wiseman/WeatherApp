@@ -19,7 +19,7 @@ class WeatherViewModel @Inject constructor(
 ) : ViewModel() {
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing: StateFlow<Boolean> = _isRefreshing
-    private val _weatherDataUiState= MutableStateFlow<WeatherState>(WeatherState.Loading)
+    private val _weatherDataUiState = MutableStateFlow<WeatherState>(WeatherState.Loading)
     val weatherDataUiState: StateFlow<WeatherState> = _weatherDataUiState
 
     fun loadWeatherInfo() {
@@ -38,6 +38,7 @@ class WeatherViewModel @Inject constructor(
                         }
                     }
                 }
+
                 _isRefreshing.update { false }
             }
         }
@@ -47,4 +48,7 @@ class WeatherViewModel @Inject constructor(
         _isRefreshing.update { true }
         loadWeatherInfo()
     }
+
+    // create a local test that run all the test on the project before pushing your code to repository
+
 }

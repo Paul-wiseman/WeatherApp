@@ -1,9 +1,9 @@
 package com.wiseman.wetherapp.data.repository
 
 import arrow.core.Either
+import com.wiseman.wetherapp.data.location.LocationTracker
 import com.wiseman.wetherapp.data.mappers.toWeatherInfo
 import com.wiseman.wetherapp.data.remote.WeatherApi
-import com.wiseman.wetherapp.data.location.LocationTracker
 import com.wiseman.wetherapp.domain.model.WeatherInfo
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
 import com.wiseman.wetherapp.util.Failure
@@ -40,7 +40,8 @@ class WeatherRepositoryImpl @Inject constructor(
             emit(
                 Either.Left(
                     Failure.NetworkError(
-                        message = e.message ?: "An failure has occurred trying to fetch weather data"
+                        message = e.message
+                            ?: "An failure has occurred trying to fetch weather data"
                     )
                 )
             )
