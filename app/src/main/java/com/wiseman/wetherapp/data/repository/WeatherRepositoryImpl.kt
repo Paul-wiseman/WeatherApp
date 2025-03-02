@@ -8,9 +8,7 @@ import com.wiseman.wetherapp.domain.model.WeatherInfo
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
 import com.wiseman.wetherapp.util.Failure
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
@@ -18,33 +16,32 @@ class WeatherRepositoryImpl @Inject constructor(
     private val locationTracker: LocationTracker,
     private val coroutineDispatcher: CoroutineDispatcher,
 ) : WeatherRepository {
-    override suspend fun getWeatherData(): Flow<Either<Failure, WeatherInfo>> = flow {
-        try {
-            when (val location = locationTracker.getCurrentLocation()) {
-                is Either.Right -> {
-                    emit(
+    override suspend fun getWeatherData(): Either<Failure, WeatherInfo> {
+        return withContext(coroutineDispatcher) {
+            try {
+                when (val location = locationTracker.getCurrentLocation()) {
+                    is Either.Right -> {
                         Either.Right(
                             weatherApiService.getWeatherData(
                                 lat = location.value.latitude,
                                 long = location.value.longitude
                             ).toWeatherInfo()
                         )
-                    )
-                }
+                    }
 
-                is Either.Left -> {
-                    emit(Either.Left(location.value))
+                    is Either.Left -> {
+                        Either.Left(location.value)
+                    }
                 }
-            }
-        } catch (e: Exception) {
-            emit(
+            } catch (e: Exception) {
                 Either.Left(
                     Failure.NetworkError(
                         message = e.message
                             ?: "An failure has occurred trying to fetch weather data"
                     )
                 )
-            )
+            }
+
         }
-    }.flowOn(coroutineDispatcher)
+    }
 }

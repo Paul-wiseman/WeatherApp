@@ -52,11 +52,11 @@ class WeatherViewModelTest {
     @Test
     fun shouldLoadWeatherData() = runTest {
         // given
-        coEvery { mockWeatherRepository.getWeatherData() } returns flowOf(
-            Either.Right(
-                testWeatherData
-            )
-        )
+        coEvery { mockWeatherRepository.getWeatherData() } returns
+                Either.Right(
+                    testWeatherData
+                )
+
 
         weatherViewModel.weatherDataUiState.test {
 
@@ -77,7 +77,7 @@ class WeatherViewModelTest {
     @Test
     fun shouldReturnAnErrorWhenLoadingWeatherDataFails() = runTest {
         // given
-        coEvery { mockWeatherRepository.getWeatherData() } returns flowOf(Either.Left(Failure.LocationError()))
+        coEvery { mockWeatherRepository.getWeatherData() } returns Either.Left(Failure.LocationError())
 
         weatherViewModel.weatherDataUiState.test {
             //when
@@ -97,11 +97,11 @@ class WeatherViewModelTest {
     @Test
     fun shouldUpdateRefreshState() = runTest {
         // given
-        coEvery { mockWeatherRepository.getWeatherData() } returns flowOf(
-            Either.Right(
-                testWeatherData
-            )
-        )
+        coEvery { mockWeatherRepository.getWeatherData() } returns
+                Either.Right(
+                    testWeatherData
+                )
+
 
         weatherViewModel.isRefreshing.test {
             // when

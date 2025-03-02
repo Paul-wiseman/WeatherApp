@@ -1,6 +1,5 @@
 package com.wiseman.wetherapp.data.repository
 
-import app.cash.turbine.test
 import arrow.core.Either
 import com.wiseman.wetherapp.TestUtil
 import com.wiseman.wetherapp.data.location.LocationTracker
@@ -57,10 +56,8 @@ class WeatherRepositoryImplTest {
         advanceUntilIdle()
 
         // then
-        weatherData.test {
-            assertEquals(Either.Right(testWeatherData.toWeatherInfo()), awaitItem())
-            awaitComplete()
-        }
+
+        assertEquals(Either.Right(testWeatherData.toWeatherInfo()), weatherData)
 
         coVerify(exactly = ONCE) {
             mockLocationTracker.getCurrentLocation()
@@ -88,10 +85,7 @@ class WeatherRepositoryImplTest {
         advanceUntilIdle()
 
         // when
-        weatherData.test {
-            assertEquals(Either.Left(expected), awaitItem())
-            awaitComplete()
-        }
+        assertEquals(Either.Left(expected), weatherData)
 
         coVerify(exactly = ONCE) { mockLocationTracker.getCurrentLocation() }
     }
@@ -121,10 +115,7 @@ class WeatherRepositoryImplTest {
         advanceUntilIdle()
 
         // then
-        weatherData.test {
-            assertEquals(Either.Left(Failure.NetworkError(expected)), awaitItem())
-            awaitComplete()
-        }
+        assertEquals(Either.Left(Failure.NetworkError(expected)), weatherData)
 
         coVerify(exactly = ONCE) {
             mockLocationTracker.getCurrentLocation()

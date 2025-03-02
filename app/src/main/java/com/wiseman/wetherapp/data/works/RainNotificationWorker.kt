@@ -11,7 +11,6 @@ import com.wiseman.wetherapp.domain.repository.WeatherRepository
 import com.wiseman.wetherapp.presentation.notification.WeatherAppNotification
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDateTime
 
 @HiltWorker
@@ -24,18 +23,15 @@ class RainNotificationWorker @AssistedInject constructor(
     CoroutineWorker(applicationContext, workerParameters) {
 
     override suspend fun doWork(): Result {
-        repository.getWeatherData().collectLatest { request ->
-            when (request) {
-                is Either.Left -> Result.failure()
-                is Either.Right -> {
-                    getWeatherDataForNextHour(request)?.let {
-                        sendWeatherNotification(it)
-                    }
-                    Result.success()
+        return when (val request = repository.getWeatherData()) {
+            is Either.Left -> Result.failure()
+            is Either.Right -> {
+                getWeatherDataForNextHour(request)?.let {
+                    sendWeatherNotification(it)
                 }
+                Result.success()
             }
         }
-        return Result.success()
     }
 
     private fun getWeatherDataForNextHour(request: Either.Right<WeatherInfo>): WeatherData? {
