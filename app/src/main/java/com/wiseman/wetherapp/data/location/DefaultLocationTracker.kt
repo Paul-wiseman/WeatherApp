@@ -7,8 +7,9 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import androidx.core.content.ContextCompat
+import arrow.core.Either
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.wiseman.wetherapp.domain.LocationTracker
+import com.wiseman.wetherapp.util.Failure
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
@@ -18,7 +19,7 @@ class DefaultLocationTracker @Inject constructor(
     private val locationClient: FusedLocationProviderClient,
     private val application: Application
 ) : LocationTracker {
-    override suspend fun getCurrentLocation(): Location? {
+    override suspend fun getCurrentLocation(): Either<Failure, LocationData> {
         val hasFineLocationAccessPermission = ContextCompat.checkSelfPermission(
             application,
             Manifest.permission.ACCESS_FINE_LOCATION
@@ -37,31 +38,46 @@ class DefaultLocationTracker @Inject constructor(
             )
 
         if (!hasCoarseLocationPermission || !hasFineLocationAccessPermission || !isGpsEnabled) {
-            return null
+            return Either.Left(Failure.LocationPermissionError())
         }
 
-        return suspendCancellableCoroutine { cont: CancellableContinuation<Location?> ->
+        return suspendCancellableCoroutine { cont: CancellableContinuation<Either<Failure, LocationData>> ->
             locationClient.lastLocation.apply {
                 if (isComplete) {
                     if (isSuccessful) {
-                        cont.resume(result)
+
+                        cont.resume(
+                            Either.Right(
+                                LocationData(
+                                    latitude = result.latitude,
+                                    longitude = result.longitude
+                                )
+                            )
+                        )
                     } else {
-                        cont.resume(null)
+                        cont.resume(Either.Left(Failure.LocationError()))
                     }
                     return@suspendCancellableCoroutine
                 }
 
-                addOnSuccessListener {
-                    cont.resume(it)
+                addOnSuccessListener { value: Location ->
+
+                    cont.resume(
+                        Either.Right(
+                            LocationData(
+                                latitude = value.latitude,
+                                longitude = value.longitude
+                            )
+                        )
+                    )
                 }
                 addOnFailureListener {
-                    cont.resume(null)
+                    cont.resume(Either.Left(Failure.LocationError()))
                 }
 
                 addOnCompleteListener {
                     cont.cancel()
                 }
-
             }
         }
 

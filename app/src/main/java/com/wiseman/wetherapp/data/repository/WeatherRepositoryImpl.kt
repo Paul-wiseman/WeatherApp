@@ -1,31 +1,47 @@
 package com.wiseman.wetherapp.data.repository
 
-import android.util.Log
+import arrow.core.Either
+import com.wiseman.wetherapp.data.location.LocationTracker
 import com.wiseman.wetherapp.data.mappers.toWeatherInfo
 import com.wiseman.wetherapp.data.remote.WeatherApi
 import com.wiseman.wetherapp.domain.model.WeatherInfo
 import com.wiseman.wetherapp.domain.repository.WeatherRepository
-import com.wiseman.wetherapp.util.Resources
+import com.wiseman.wetherapp.util.Failure
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class WeatherRepositoryImpl @Inject constructor(
-    private val api: WeatherApi
+    private val weatherApiService: WeatherApi,
+    private val locationTracker: LocationTracker,
+    private val coroutineDispatcher: CoroutineDispatcher,
 ) : WeatherRepository {
-    override suspend fun getWeatherData(
-        latitude: Double,
-        longitude: Double
-    ): Resources<WeatherInfo> {
-        return try {
-            Log.i("Weather", "apiRequest  result -- ${api.getWeatherData(latitude,longitude)} ")
-            Resources.Success(
-                data = api.getWeatherData(
-                    lat = latitude,
-                    long = longitude
-                ).toWeatherInfo()
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Resources.Error(message = e.message ?: "An unknown error occurred")
+    override suspend fun getWeatherData(): Either<Failure, WeatherInfo> {
+        return withContext(coroutineDispatcher) {
+            try {
+                when (val location = locationTracker.getCurrentLocation()) {
+                    is Either.Right -> {
+                        Either.Right(
+                            weatherApiService.getWeatherData(
+                                lat = location.value.latitude,
+                                long = location.value.longitude
+                            ).toWeatherInfo()
+                        )
+                    }
+
+                    is Either.Left -> {
+                        Either.Left(location.value)
+                    }
+                }
+            } catch (e: Exception) {
+                Either.Left(
+                    Failure.NetworkError(
+                        message = e.message
+                            ?: "An failure has occurred trying to fetch weather data"
+                    )
+                )
+            }
+
         }
     }
 }
